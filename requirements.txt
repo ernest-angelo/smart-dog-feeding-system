@@ -1,7 +1,6 @@
 streamlit
 opencv-python-headless
 ultralytics
-pyserial
 firebase-admin
 pandas
 plotly
