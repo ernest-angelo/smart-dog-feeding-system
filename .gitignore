@@ -1,0 +1,6 @@
+venv/
+.venv/
+IoT/.venv/
+__pycache__/
+firebase_key.json
+*.pt
