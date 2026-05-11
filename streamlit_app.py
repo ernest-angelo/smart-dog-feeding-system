@@ -2,39 +2,59 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+from streamlit_webrtc import webrtc_streamer
+
 from app.firebase_config import db
 
 # =========================
-# STREAMLIT CONFIG
+# PAGE CONFIG
 # =========================
 
 st.set_page_config(
     page_title="Smart Dog Feeding Dashboard",
     page_icon="🐶",
-    layout="wide",
+    layout="wide"
 )
 
 # =========================
 # HEADER
 # =========================
 
-st.title("🐶 Smart Dog Feeding Dashboard")
+st.title("🐶 Smart Dog Feeding System")
 
 st.caption(
-    "Realtime IoT monitoring dashboard using Firebase + Streamlit."
+    "Realtime IoT monitoring dashboard using Firebase + Webcam Browser."
 )
 
 # =========================
-# FETCH FIREBASE DATA
+# WEBCAM SECTION
 # =========================
+
+st.subheader("📷 Live Camera")
+
+st.info(
+    "Izinkan akses camera browser untuk menampilkan webcam laptop."
+)
+
+webrtc_streamer(
+    key="dog-camera"
+)
+
+# =========================
+# FIREBASE DATA
+# =========================
+
+st.subheader("📡 Realtime Firebase Logs")
 
 docs = (
     db.collection("feeding_logs")
-    .order_by("timestamp", direction="DESCENDING")
     .stream()
 )
 
-history = [doc.to_dict() for doc in docs]
+history = [
+    doc.to_dict()
+    for doc in docs
+]
 
 # =========================
 # EMPTY CHECK
@@ -42,7 +62,9 @@ history = [doc.to_dict() for doc in docs]
 
 if not history:
 
-    st.warning("Belum ada data feeding logs.")
+    st.warning(
+        "Belum ada feeding logs."
+    )
 
     st.stop()
 
@@ -74,10 +96,10 @@ auto_count = len(
     df[df["mode"] == "auto"]
 )
 
-latest_mode = df.iloc[0]["mode"]
+latest_mode = df.iloc[-1]["mode"]
 
 # =========================
-# TOP METRICS
+# METRIC UI
 # =========================
 
 col1, col2, col3, col4 = st.columns(4)
@@ -92,14 +114,14 @@ with col1:
 with col2:
 
     st.metric(
-        "🤖 Auto Feeding",
+        "🤖 Auto Feed",
         auto_count
     )
 
 with col3:
 
     st.metric(
-        "👨 Manual Feeding",
+        "👨 Manual Feed",
         manual_count
     )
 
@@ -111,20 +133,20 @@ with col4:
     )
 
 # =========================
-# LATEST DETECTION
+# LATEST LOG
 # =========================
 
 st.subheader("🐶 Latest Detection")
 
-latest = history[0]
+latest = history[-1]
 
 st.json(latest)
 
 # =========================
-# HISTORY TABLE
+# TABLE
 # =========================
 
-st.subheader("📜 Feeding History")
+st.subheader("📋 Feeding History")
 
 st.dataframe(
     df,
@@ -161,9 +183,9 @@ st.plotly_chart(
 )
 
 # =========================
-# AUTO REFRESH
+# FOOTER
 # =========================
 
 st.caption(
-    "🔄 Refresh page untuk update realtime terbaru dari Firebase."
+    "🚀 Smart Dog Feeding System • Firebase + Streamlit + Browser Camera"
 )
