@@ -1,10 +1,6 @@
-streamlit
-opencv-python-headless
-ultralytics
+streamlit==1.33.0
+streamlit-webrtc==0.47.7
+opencv-python-headless==4.9.0.80
 firebase-admin
 pandas
 plotly
-torch
-torchvision
-torchaudio
-streamlit-webrtc
